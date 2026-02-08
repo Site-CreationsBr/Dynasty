@@ -158,7 +158,7 @@ export function App() {
       playerRef.current = new window.YT.Player('youtube-player', {
         videoId: 'toLrnNkxqow',
         playerVars: {
-          autoplay: 0,
+          autoplay: 1, // Auto-start
           controls: 0,
           disablekb: 1,
           fs: 0,
@@ -166,19 +166,22 @@ export function App() {
           playlist: 'toLrnNkxqow',
           modestbranding: 1,
           rel: 0,
+          mute: 0, // Start unmuted
         },
         events: {
           onReady: (event) => {
             playerReadyRef.current = true;
-            event.target.setVolume(15); // 15% volume
-            // If user already interacted, start playing
-            if (hasInteracted) {
-              event.target.playVideo();
-              setIsPlaying(true);
-            }
+            event.target.setVolume(8); // 8% volume - very low
+            // Try to autoplay immediately
+            event.target.playVideo();
+            setIsPlaying(true);
+            setHasInteracted(true);
           },
           onStateChange: (event) => {
             // 0 = ended, 1 = playing, 2 = paused
+            if (event.data === 1) {
+              setIsPlaying(true);
+            }
             if (event.data === 0) {
               // Video ended, it should loop automatically due to playlist param
               playerRef.current?.playVideo();
@@ -247,15 +250,20 @@ export function App() {
     const rainAudio = document.getElementById('rain-audio') as HTMLAudioElement;
     if (rainAudio) {
       rainAudioRef.current = rainAudio;
-      rainAudio.volume = 0.08; // Very low volume - 8%
+      rainAudio.volume = 0.05; // Very low volume - 5%
+      
+      // Try to autoplay immediately
+      rainAudio.play().catch(() => {
+        // Autoplay blocked by browser, will play on interaction
+      });
     }
   }, []);
 
-  // Start rain audio on first interaction
+  // Also try playing rain when hasInteracted changes (fallback)
   useEffect(() => {
     if (hasInteracted && rainAudioRef.current) {
       rainAudioRef.current.play().catch(() => {
-        // Autoplay blocked, will try again on next interaction
+        // Autoplay blocked
       });
     }
   }, [hasInteracted]);
@@ -326,6 +334,7 @@ export function App() {
       <audio
         id="rain-audio"
         loop
+        autoPlay
         preload="auto"
         className="hidden"
       >
