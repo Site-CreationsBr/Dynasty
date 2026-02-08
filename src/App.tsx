@@ -319,39 +319,66 @@ export function App() {
           {/* Stats/Features - responsive grid */}
           <div className="flex flex-row items-start justify-center gap-4 sm:gap-0 sm:grid sm:grid-cols-[1fr_auto_1fr_auto_1fr]">
             {/* Coluna 1 - CREW */}
-            <div className="flex flex-col items-center justify-center text-center px-3 sm:px-4 md:px-8">
-              <div className="text-white/20 text-[10px] sm:text-xs tracking-[0.15em] sm:tracking-[0.2em] uppercase mb-1">Crew</div>
-              <div className="text-white/60 text-xs sm:text-sm tracking-widest">Firmeza</div>
+            <div className="group relative flex flex-col items-center justify-center text-center px-3 sm:px-4 md:px-8 py-3 cursor-default transition-all duration-500 ease-in-out sm:hover:scale-105">
+              {/* Hover glow effect - desktop only */}
+              <div className="absolute inset-0 opacity-0 sm:group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+                <div className="absolute inset-0 bg-gradient-radial from-white/5 via-transparent to-transparent blur-xl" />
+              </div>
+              {/* Top line animation */}
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent w-0 sm:group-hover:w-full transition-all duration-500 ease-out" />
+              {/* Content */}
+              <div className="text-white/20 text-[10px] sm:text-xs tracking-[0.15em] sm:tracking-[0.2em] uppercase mb-1 transition-all duration-300 sm:group-hover:text-white/50 sm:group-hover:tracking-[0.25em]">Crew</div>
+              <div className="text-white/60 text-xs sm:text-sm tracking-widest transition-all duration-300 sm:group-hover:text-white/90 sm:group-hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">Firmeza</div>
+              {/* Bottom line animation */}
+              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent w-0 sm:group-hover:w-full transition-all duration-500 ease-out delay-100" />
             </div>
             
             {/* Separador 1 - hidden on mobile, use border instead */}
-            <div className="hidden sm:block w-px h-12 bg-gradient-to-b from-transparent via-white/20 to-transparent" />
+            <div className="hidden sm:block w-px h-12 bg-gradient-to-b from-transparent via-white/20 to-transparent transition-all duration-300" />
             <div className="sm:hidden w-px h-8 bg-white/10" />
             
             {/* Coluna 2 - CALLS (central) com indicador */}
-            <div className="flex flex-col items-center justify-center text-center px-3 sm:px-4 md:px-8">
-              <div className="text-white/20 text-[10px] sm:text-xs tracking-[0.15em] sm:tracking-[0.2em] uppercase mb-1">Calls</div>
-              <div className="text-white/60 text-xs sm:text-sm tracking-widest whitespace-nowrap">Toda Noite</div>
+            <div className="group relative flex flex-col items-center justify-center text-center px-3 sm:px-4 md:px-8 py-3 cursor-default transition-all duration-500 ease-in-out sm:hover:scale-105">
+              {/* Hover glow effect - desktop only */}
+              <div className="absolute inset-0 opacity-0 sm:group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+                <div className="absolute inset-0 bg-gradient-radial from-white/5 via-transparent to-transparent blur-xl" />
+              </div>
+              {/* Top line animation */}
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent w-0 sm:group-hover:w-full transition-all duration-500 ease-out" />
+              {/* Content */}
+              <div className="text-white/20 text-[10px] sm:text-xs tracking-[0.15em] sm:tracking-[0.2em] uppercase mb-1 transition-all duration-300 sm:group-hover:text-white/50 sm:group-hover:tracking-[0.25em]">Calls</div>
+              <div className="text-white/60 text-xs sm:text-sm tracking-widest whitespace-nowrap transition-all duration-300 sm:group-hover:text-white/90 sm:group-hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">Toda Noite</div>
+              {/* Bottom line animation */}
+              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent w-0 sm:group-hover:w-full transition-all duration-500 ease-out delay-100" />
               
               {/* Indicador visual central - hidden on mobile */}
-              <div className="hidden sm:flex flex-col items-center justify-center mt-6">
+              <div className="hidden sm:flex flex-col items-center justify-center mt-6 transition-all duration-300 sm:group-hover:opacity-100 opacity-70">
                 <div className="flex items-center justify-center gap-2">
-                  <div className="w-1 h-1 bg-white/30 rounded-full" />
-                  <div className="w-2 h-2 bg-white/20 rounded-full" />
-                  <div className="w-1 h-1 bg-white/30 rounded-full" />
+                  <div className="w-1 h-1 bg-white/30 rounded-full transition-all duration-300 sm:group-hover:bg-white/50 sm:group-hover:scale-125" />
+                  <div className="w-2 h-2 bg-white/20 rounded-full transition-all duration-300 sm:group-hover:bg-white/40 sm:group-hover:scale-110" />
+                  <div className="w-1 h-1 bg-white/30 rounded-full transition-all duration-300 sm:group-hover:bg-white/50 sm:group-hover:scale-125" />
                 </div>
-                <div className="w-8 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent mt-2" />
+                <div className="w-8 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent mt-2 transition-all duration-300 sm:group-hover:w-12 sm:group-hover:via-white/50" />
               </div>
             </div>
             
             {/* Separador 2 */}
-            <div className="hidden sm:block w-px h-12 bg-gradient-to-b from-transparent via-white/20 to-transparent" />
+            <div className="hidden sm:block w-px h-12 bg-gradient-to-b from-transparent via-white/20 to-transparent transition-all duration-300" />
             <div className="sm:hidden w-px h-8 bg-white/10" />
             
             {/* Coluna 3 - RISADAS */}
-            <div className="flex flex-col items-center justify-center text-center px-3 sm:px-4 md:px-8">
-              <div className="text-white/20 text-[10px] sm:text-xs tracking-[0.15em] sm:tracking-[0.2em] uppercase mb-1">Risadas</div>
-              <div className="text-white/60 text-xs sm:text-sm tracking-widest">Garantidas</div>
+            <div className="group relative flex flex-col items-center justify-center text-center px-3 sm:px-4 md:px-8 py-3 cursor-default transition-all duration-500 ease-in-out sm:hover:scale-105">
+              {/* Hover glow effect - desktop only */}
+              <div className="absolute inset-0 opacity-0 sm:group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+                <div className="absolute inset-0 bg-gradient-radial from-white/5 via-transparent to-transparent blur-xl" />
+              </div>
+              {/* Top line animation */}
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent w-0 sm:group-hover:w-full transition-all duration-500 ease-out" />
+              {/* Content */}
+              <div className="text-white/20 text-[10px] sm:text-xs tracking-[0.15em] sm:tracking-[0.2em] uppercase mb-1 transition-all duration-300 sm:group-hover:text-white/50 sm:group-hover:tracking-[0.25em]">Risadas</div>
+              <div className="text-white/60 text-xs sm:text-sm tracking-widest transition-all duration-300 sm:group-hover:text-white/90 sm:group-hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">Garantidas</div>
+              {/* Bottom line animation */}
+              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent w-0 sm:group-hover:w-full transition-all duration-500 ease-out delay-100" />
             </div>
           </div>
           
