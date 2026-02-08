@@ -1,4 +1,76 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+
+// Matrix rain component - numbers falling with fade
+const MatrixRain = () => {
+  const columns = useMemo(() => {
+    // Create fewer columns for performance
+    const cols = [];
+    const numColumns = 15; // Reduced number for performance
+    for (let i = 0; i < numColumns; i++) {
+      cols.push({
+        id: i,
+        left: `${(i / numColumns) * 100 + Math.random() * 5}%`,
+        delay: Math.random() * 10,
+        duration: 8 + Math.random() * 12,
+      });
+    }
+    return cols;
+  }, []);
+
+  return (
+    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+      {columns.map((col) => (
+        <MatrixColumn key={col.id} left={col.left} delay={col.delay} duration={col.duration} />
+      ))}
+    </div>
+  );
+};
+
+// Individual column of falling numbers
+const MatrixColumn = ({ left, delay, duration }: { left: string; delay: number; duration: number }) => {
+  const [numbers, setNumbers] = useState<string[]>([]);
+  
+  useEffect(() => {
+    // Generate random numbers for this column
+    const generateNumbers = () => {
+      const chars = '0123456789';
+      const length = 15 + Math.floor(Math.random() * 10);
+      return Array.from({ length }, () => chars[Math.floor(Math.random() * chars.length)]);
+    };
+    
+    setNumbers(generateNumbers());
+    
+    // Regenerate numbers periodically
+    const interval = setInterval(() => {
+      setNumbers(generateNumbers());
+    }, duration * 1000);
+    
+    return () => clearInterval(interval);
+  }, [duration]);
+
+  return (
+    <div
+      className="absolute top-0 flex flex-col items-center"
+      style={{
+        left,
+        animation: `matrixFall ${duration}s linear ${delay}s infinite`,
+      }}
+    >
+      {numbers.map((num, idx) => (
+        <span
+          key={idx}
+          className="text-[10px] sm:text-xs font-mono leading-4 select-none"
+          style={{
+            color: `rgba(80, 80, 80, ${0.15 - idx * 0.008})`,
+            textShadow: idx < 3 ? '0 0 2px rgba(100,100,100,0.2)' : 'none',
+          }}
+        >
+          {num}
+        </span>
+      ))}
+    </div>
+  );
+};
 
 // Declare YouTube types
 declare global {
@@ -139,6 +211,17 @@ export function App() {
 
   return (
     <div className="relative min-h-screen bg-black overflow-hidden">
+      {/* Background Image */}
+      <div 
+        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: `url('https://cdn.discordapp.com/attachments/1469167345330163866/1470164200750846187/image.png?ex=698a4c9b&is=6988fb1b&hm=67f35c93ffe8213638b10ea35bfb5d63cf36328922d791215b14821b79b0e460&')`,
+        }}
+      />
+      
+      {/* Dark overlay to darken the background */}
+      <div className="absolute inset-0 z-0 bg-black/75" />
+
       {/* Animated background gradient following mouse */}
       <div 
         className="pointer-events-none fixed inset-0 z-0 opacity-30 transition-opacity duration-1000"
@@ -170,6 +253,9 @@ export function App() {
           />
         ))}
       </div>
+
+      {/* Matrix rain effect - hacker style numbers */}
+      <MatrixRain />
 
       {/* Main content */}
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 sm:px-6 py-8 sm:py-12">
@@ -233,11 +319,27 @@ export function App() {
           </div>
         </div>
         
-        {/* CSS for float animation */}
+        {/* CSS for float animation and matrix rain */}
         <style>{`
           @keyframes float {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-8px); }
+          }
+          @keyframes matrixFall {
+            0% {
+              transform: translateY(-100%);
+              opacity: 0;
+            }
+            10% {
+              opacity: 1;
+            }
+            85% {
+              opacity: 1;
+            }
+            100% {
+              transform: translateY(100vh);
+              opacity: 0;
+            }
           }
         `}</style>
 
