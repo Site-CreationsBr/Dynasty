@@ -1,5 +1,41 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 
+// Rain effect component - discrete gray rain with fade
+const RainEffect = () => {
+  const drops = useMemo(() => {
+    const rainDrops = [];
+    const numDrops = 40; // Light rain, not too heavy
+    for (let i = 0; i < numDrops; i++) {
+      rainDrops.push({
+        id: i,
+        left: `${Math.random() * 100}%`,
+        delay: Math.random() * 5,
+        duration: 0.8 + Math.random() * 0.6, // Faster drops
+        opacity: 0.1 + Math.random() * 0.15, // Very subtle
+        height: 15 + Math.random() * 25, // Varying lengths
+      });
+    }
+    return rainDrops;
+  }, []);
+
+  return (
+    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+      {drops.map((drop) => (
+        <div
+          key={drop.id}
+          className="absolute top-0 w-px rounded-full"
+          style={{
+            left: drop.left,
+            height: `${drop.height}px`,
+            background: `linear-gradient(to bottom, transparent, rgba(150, 150, 150, ${drop.opacity}), transparent)`,
+            animation: `rainFall ${drop.duration}s linear ${drop.delay}s infinite`,
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
 // Matrix rain component - numbers falling with fade
 const MatrixRain = () => {
   const columns = useMemo(() => {
@@ -107,6 +143,7 @@ export function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const playerRef = useRef<YTPlayer | null>(null);
   const playerReadyRef = useRef(false);
+  const rainAudioRef = useRef<HTMLAudioElement | null>(null);
 
   // Initialize YouTube API
   useEffect(() => {
@@ -194,7 +231,7 @@ export function App() {
     };
   }, [startPlaying]);
 
-  // Handle mute/unmute
+  // Handle mute/unmute for YouTube player
   useEffect(() => {
     if (playerRef.current && playerReadyRef.current) {
       if (isMuted) {
@@ -202,6 +239,31 @@ export function App() {
       } else {
         playerRef.current.unMute();
       }
+    }
+  }, [isMuted]);
+
+  // Initialize and control rain audio
+  useEffect(() => {
+    const rainAudio = document.getElementById('rain-audio') as HTMLAudioElement;
+    if (rainAudio) {
+      rainAudioRef.current = rainAudio;
+      rainAudio.volume = 0.08; // Very low volume - 8%
+    }
+  }, []);
+
+  // Start rain audio on first interaction
+  useEffect(() => {
+    if (hasInteracted && rainAudioRef.current) {
+      rainAudioRef.current.play().catch(() => {
+        // Autoplay blocked, will try again on next interaction
+      });
+    }
+  }, [hasInteracted]);
+
+  // Handle mute/unmute for rain audio
+  useEffect(() => {
+    if (rainAudioRef.current) {
+      rainAudioRef.current.muted = isMuted;
     }
   }, [isMuted]);
 
@@ -256,6 +318,19 @@ export function App() {
 
       {/* Matrix rain effect - hacker style numbers */}
       <MatrixRain />
+
+      {/* Rain effect - discrete gray rain drops */}
+      <RainEffect />
+
+      {/* Rain ambient sound - using freesound.org audio */}
+      <audio
+        id="rain-audio"
+        loop
+        preload="auto"
+        className="hidden"
+      >
+        <source src="https://cdn.freesound.org/previews/531/531947_6849604-lq.mp3" type="audio/mpeg" />
+      </audio>
 
       {/* Main content */}
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 sm:px-6 py-8 sm:py-12">
@@ -334,6 +409,22 @@ export function App() {
               opacity: 1;
             }
             85% {
+              opacity: 1;
+            }
+            100% {
+              transform: translateY(100vh);
+              opacity: 0;
+            }
+          }
+          @keyframes rainFall {
+            0% {
+              transform: translateY(-100%);
+              opacity: 0;
+            }
+            10% {
+              opacity: 1;
+            }
+            90% {
               opacity: 1;
             }
             100% {
